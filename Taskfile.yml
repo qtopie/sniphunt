@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the sniphunt binary
+    cmds:
+      - go build -o sniphunt ./cmd/sniphunt/main.go
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test -v ./...
+
+  lint:
+    desc: Run golangci-lint (if installed)
+    cmds:
+      - golangci-lint run ./...
+    ignore_error: true
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -f sniphunt
+
+  all:
+    desc: Run lint, test and build
+    deps: [lint, test, build]
