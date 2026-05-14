@@ -2,10 +2,10 @@ package search
 
 import (
 	"context"
+	"regexp"
 	"runtime"
 	"strings"
 
-	"github.com/dlclark/regexp2"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -39,10 +39,10 @@ type task struct {
 
 // Search executes a regex search starting from the root directory.
 func (s *Searcher) Search(ctx context.Context, root string, patternStr string) (<-chan Match, <-chan error) {
-	matchChan := make(chan Match, 100)
+	matchChan := make(chan Match, 1000)
 	errChan := make(chan error, 1)
 
-	re, err := regexp2.Compile(patternStr, regexp2.None)
+	re, err := regexp.Compile(patternStr)
 	if err != nil {
 		errChan <- err
 		close(matchChan)
@@ -61,7 +61,7 @@ func (s *Searcher) Search(ctx context.Context, root string, patternStr string) (
 		defer close(errChan)
 
 		g, ctx := errgroup.WithContext(ctx)
-		tasks := make(chan task, s.Workers*2)
+		tasks := make(chan task, s.Workers*10)
 
 		// Start producer
 		g.Go(func() error {
@@ -86,7 +86,7 @@ func (s *Searcher) Search(ctx context.Context, root string, patternStr string) (
 
 // MatchSnippet executes a similarity-based search starting from the root directory.
 func (s *Searcher) MatchSnippet(ctx context.Context, root string, snippet string) (<-chan Match, <-chan error) {
-	matchChan := make(chan Match, 100)
+	matchChan := make(chan Match, 1000)
 	errChan := make(chan error, 1)
 
 	go func() {
@@ -94,7 +94,7 @@ func (s *Searcher) MatchSnippet(ctx context.Context, root string, snippet string
 		defer close(errChan)
 
 		g, ctx := errgroup.WithContext(ctx)
-		tasks := make(chan task, s.Workers*2)
+		tasks := make(chan task, s.Workers*10)
 
 		// Start producer
 		g.Go(func() error {

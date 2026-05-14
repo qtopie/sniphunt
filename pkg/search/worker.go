@@ -2,22 +2,23 @@ package search
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"os"
-	"strings"
 	"sync"
+	"regexp"
 
-	"github.com/dlclark/regexp2"
 	"github.com/qtopie/sniphunt/pkg/similarity"
 )
 
 var bufferPool = sync.Pool{
 	New: func() interface{} {
-		return make([]byte, 64*1024) // 64KB buffer
+		return make([]byte, 1024*1024) // 1MB buffer
 	},
 }
 
-func (s *Searcher) regexWorker(ctx context.Context, pattern *regexp2.Regexp, literal string, tasks <-chan task, results chan<- Match) error {
+func (s *Searcher) regexWorker(ctx context.Context, pattern *regexp.Regexp, literal string, tasks <-chan task, results chan<- Match) error {
+	literalBytes := []byte(literal)
 	for t := range tasks {
 		file, err := os.Open(t.path)
 		if err != nil {
@@ -34,12 +35,11 @@ func (s *Searcher) regexWorker(ctx context.Context, pattern *regexp2.Regexp, lit
 			line := scanner.Bytes()
 
 			// Pre-filter with literal string if available
-			if literal != "" && !strings.Contains(string(line), literal) {
+			if len(literalBytes) > 0 && !bytes.Contains(line, literalBytes) {
 				continue
 			}
 
-			match, err := pattern.MatchString(string(line))
-			if err == nil && match {
+			if pattern.Match(line) {
 				select {
 				case results <- Match{
 					Path:    t.path,
