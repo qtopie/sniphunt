@@ -17,6 +17,21 @@ tasks:
       - golangci-lint run ./...
     ignore_error: true
 
+  dist:
+    desc: Create release builds for all platforms
+    cmds:
+      - mkdir -p dist
+      - GOOS=linux GOARCH=amd64 go build -o dist/sniphunt_linux_amd64 ./cmd/sniphunt/main.go
+      - GOOS=linux GOARCH=arm64 go build -o dist/sniphunt_linux_arm64 ./cmd/sniphunt/main.go
+      - GOOS=darwin GOARCH=amd64 go build -o dist/sniphunt_darwin_amd64 ./cmd/sniphunt/main.go
+      - GOOS=darwin GOARCH=arm64 go build -o dist/sniphunt_darwin_arm64 ./cmd/sniphunt/main.go
+      - GOOS=windows GOARCH=amd64 go build -o dist/sniphunt_windows_amd64.exe ./cmd/sniphunt/main.go
+      - cd dist && for f in *; do tar -czf "${f}.tar.gz" "$f"; done
+
+  release:
+    desc: Build and package for release
+    deps: [test, dist]
+
   clean:
     desc: Clean build artifacts
     cmds:
