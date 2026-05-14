@@ -1,4 +1,4 @@
-module github.com/masatana/sniphunt
+module github.com/qtopie/sniphunt
 
 go 1.25.0
 

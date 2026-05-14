@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/dlclark/regexp2"
-	"github.com/masatana/sniphunt/pkg/similarity"
+	"github.com/qtopie/sniphunt/pkg/similarity"
 )
 
 var bufferPool = sync.Pool{

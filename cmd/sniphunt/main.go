@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/masatana/sniphunt/pkg/search"
+	"github.com/qtopie/sniphunt/pkg/search"
 )
 
 var (

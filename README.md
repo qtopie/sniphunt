@@ -18,13 +18,13 @@ It is designed to be fast, memory-efficient, and easy to integrate as a library.
 ### CLI Tool
 Install the `sniphunt` command:
 ```bash
-go install github.com/masatana/sniphunt/cmd/sniphunt@latest
+go install github.com/qtopie/sniphunt/cmd/sniphunt@latest
 ```
 
 ### Library
 Add Sniphunt to your project:
 ```bash
-go get github.com/masatana/sniphunt
+go get github.com/qtopie/sniphunt
 ```
 
 ## Usage
@@ -54,7 +54,7 @@ sniphunt -pattern "TODO" -ignore ".git,vendor" -workers 8 -dir .
 import (
     "context"
     "fmt"
-    "github.com/masatana/sniphunt/pkg/search"
+    "github.com/qtopie/sniphunt/pkg/search"
 )
 
 func main() {
