@@ -23,6 +23,7 @@ type Searcher struct {
 	Ignore        []string
 	Extensions    []string
 	IncludeHidden bool
+	SearchZips    bool
 }
 
 // NewSearcher creates a new Searcher with default values.

@@ -18,6 +18,7 @@ var (
 	workers     int
 	ignorePaths string
 	extensions  string
+	searchZips  bool
 )
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 	flag.IntVar(&workers, "workers", 0, "number of workers (default: NumCPU)")
 	flag.StringVar(&ignorePaths, "ignore", "", "comma-separated list of paths to ignore")
 	flag.StringVar(&extensions, "ext", ".java", "comma-separated list of extensions to include")
+	flag.BoolVar(&searchZips, "z", false, "search within ZIP/JAR files")
 	flag.Parse()
 
 	if inputFile == "" && pattern == "" {
@@ -36,6 +38,7 @@ func main() {
 	}
 
 	s := search.NewSearcher()
+	s.SearchZips = searchZips
 	if workers > 0 {
 		s.Workers = workers
 	}
